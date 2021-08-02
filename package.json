@@ -18,5 +18,8 @@
   "homepage": "https://github.com/MikeBombay/team-profile-generator#readme",
   "devDependencies": {
     "jest": "^27.0.6"
+  },
+  "dependencies": {
+    "inquirer": "^8.1.2"
   }
 }
