@@ -115,7 +115,7 @@ function addEmployee() {
   //      <p>ID:${id}, Email: ${email}, Office#: ${office}</p>
  //   </body>
  //   </html>`
-        }
+        
   //  console.log("Team member added")
  //   fs.appendFile("./src/page.html", html, function (err) {
   //      if (err) {
