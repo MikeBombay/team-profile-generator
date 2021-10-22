@@ -84,9 +84,9 @@ function generate(member) {
        const email = member.getEmail();
        if (role === "Engineer") {
         const gitHub = member.getGithub();
-        html = `<div class="col-6">
-        <div class="card mx-auto mb-3" style="width: 18rem">
-        <h5 class="card-header">${name}<br /><br />Engineer</h5>
+        html = `<div class="col-4">
+        <div class="card mx-auto mb-3" style="width: 14rem">
+        <h5 class="card-header" style="background-color:cornflowerblue;">${name}<br />Engineer</h5>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">ID: ${id}</li>
             <li class="list-group-item">Email Address: ${email}</li>
@@ -96,9 +96,9 @@ function generate(member) {
     </div>`;
     } else if (role === "Intern") {
             const school = member.getSchool();
-            html = `<div class="col-6">
-            <div class="card mx-auto mb-3" style="width: 18rem">
-            <h5 class="card-header">${name}<br /><br />Intern</h5>
+            html = `<div class="col-4">
+            <div class="card mx-auto mb-3" style="width: 14rem">
+            <h5 class="card-header" style="background-color:cornflowerblue;">${name}<br />Intern</h5>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${id}</li>
                 <li class="list-group-item">Email Address: ${email}</li>
@@ -108,9 +108,9 @@ function generate(member) {
         </div>`;
     } else {
         const officeNo = member.getOfficeNo();
-        html = `<div class="col-6">
-        <div class="card mx-auto mb-3" style="width: 18rem">
-        <h5 class="card-header">${name}<br /><br />Manager</h5>
+        html = `<div class="col-4">
+        <div class="card mx-auto mb-3" style="width: 14rem">
+        <h5 class="card-header" style="background-color:cornflowerblue;">${name}<br />Manager</h5>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">ID: ${id}</li>
             <li class="list-group-item">Email Address: ${email}</li>

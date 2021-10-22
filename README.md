@@ -8,5 +8,7 @@ Installation / Usage:
 2. Clone repo, run npm Install
 3. run node index.js
 4. answer prompts
-5. 
+
+
+Walkthrought video: https://watch.screencastify.com/v/dRmZAt2TUT0zErB08LlA
 
