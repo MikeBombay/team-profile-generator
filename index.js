@@ -1,10 +1,9 @@
 const inquirer = require('inquirer');
 const fs = require("fs");
-const Employee = require('./lib/Employee');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-const employees = [];
+let employees = [];
 
 function addEmployee() {
     inquirer.prompt([{
@@ -31,96 +30,115 @@ function addEmployee() {
         ],
         name: "role"
     },])
-    .then(({name, role, id, email}) => {
-        if (role === "Manager") {
-            return inquirer.prompt([{
-                type:'text',
-                name: 'officeNo',
-                message:"Enter Manager's office #"
-            },
-            {
-                type: "list",
-                message: "Would you like to add more team members?",
-                choices: [
-                "yes",
-                "no"
-                ],
-                name: "addMore"
-                }]).then(({officeNo, addMore})=>{
-                    employees.push(new Manager(name, id, email, role, officeNo))
-                        console.log(employees)
-                        if (addMore === "yes") {addEmployee();
-                        }
-                        else generate()
-                    })}
-                
-        else if (role === "Intern") {
-            return inquirer.prompt([{
-                type:'text',
-                name: 'school',
-                message:"Enter Intern's school"
-            },
-            {
-                type: "list",
-                message: "Would you like to add more team members?",
-                choices: [
+    .then(function({name, role, id, email}) {
+        let roleInfo = "";
+        if (role === "Engineer") {
+            roleInfo = "GitHub username";
+        } else if (role === "Intern") {
+            roleInfo = "school name";
+        } else {
+            roleInfo = "office phone number";
+        }
+        inquirer.prompt([{
+            message: `Enter team member's ${roleInfo}`,
+            name: "roleInfo"
+        },
+        {
+            type: "list",
+            message: "Would you like to add more team members?",
+            choices: [
                 "yes",
                 "exit"
-                ],
-                name: "addMore"
-            }])
-            .then(({school, addMore})=> {
-                employees.push(new Intern(name, role, id, email, school))
-                if (addMore === "yes") {
+            ],
+            name: "moreMembers"
+        }])
+        .then(function({roleInfo, moreMembers}) {
+            let newMember;
+            if (role === "Engineer") {
+                newMember = new Engineer(name, id, email, roleInfo);
+            } else if (role === "Intern") {
+                newMember = new Intern(name, id, email, roleInfo);
+            } else {
+                newMember = new Manager(name, id, email, roleInfo);
+            }
+            employees.push(newMember);
+            generate(newMember)
+            .then(function() {
+                if (moreMembers === "yes") {
                     addEmployee();
+                } else {
+                    finish();
                 }
-            })}
-        
-        else if (role === "Engineer") {
-            return inquirer.prompt([{
-                type:'text',
-                name: 'github',
-                message:"Enter Engineer's Gihub ID"
-                },
-                {
-                type: "list",
-                message: "Would you like to add more team members?",
-                choices: [
-                    "yes",
-                    "no"
-                    ],
-                    name: "addMore"
-                }])
-                .then(({github, addMore})=> {
-                    employees.push(new Engineer(name, role, id, email, github))
-                    if (addMore === "yes") {
-                        addEmployee();
-                       
-                   
-                }})}})};
+            });
+            
+        });
+    });
+}
 
-                addEmployee();
-
-//function generate(member) {
-  //  return new Promise(function(resolve, reject) {
-  //      let html = ""
-  //      const name = member.getName();
-  //      const role = member.getRole();
-   //     const id = member.getId();
-   //     const email = member.getEmail();
-  //      if (role === "Manager") {
-  //          const office = member.getOfficeNo
-  //      html = `<div class="col-2" style="align-items: center;"></div>
-  //      <h4>${name} - Manager</h4>
-  //      <p>ID:${id}, Email: ${email}, Office#: ${office}</p>
- //   </body>
- //   </html>`
+function generate(member) {
+   return new Promise(function(resolve, reject) {
+       let html = ""
+       const name = member.getName();
+       const role = member.getRole();
+       const id = member.getId();
+       const email = member.getEmail();
+       if (role === "Engineer") {
+        const gitHub = member.getGithub();
+        html = `<div class="col-6">
+        <div class="card mx-auto mb-3" style="width: 18rem">
+        <h5 class="card-header">${name}<br /><br />Engineer</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">ID: ${id}</li>
+            <li class="list-group-item">Email Address: ${email}</li>
+            <li class="list-group-item">GitHub: ${gitHub}</li>
+        </ul>
+        </div>
+    </div>`;
+    } else if (role === "Intern") {
+            const school = member.getSchool();
+            html = `<div class="col-6">
+            <div class="card mx-auto mb-3" style="width: 18rem">
+            <h5 class="card-header">${name}<br /><br />Intern</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">ID: ${id}</li>
+                <li class="list-group-item">Email Address: ${email}</li>
+                <li class="list-group-item">School: ${school}</li>
+            </ul>
+            </div>
+        </div>`;
+    } else {
+        const officeNo = member.getOfficeNo();
+        html = `<div class="col-6">
+        <div class="card mx-auto mb-3" style="width: 18rem">
+        <h5 class="card-header">${name}<br /><br />Manager</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">ID: ${id}</li>
+            <li class="list-group-item">Email Address: ${email}</li>
+            <li class="list-group-item">Office Phone: ${officeNo}</li>
+        </ul>
+        </div>
+    </div>`
+    }
         
-  //  console.log("Team member added")
- //   fs.appendFile("./src/page.html", html, function (err) {
-  //      if (err) {
-   //         return reject(err);
- //       };
- //       return resolve();
- //   });
-//})};
+   console.log("Team member added")
+   fs.appendFile("./src/page.html", html, function (err) {
+       if (err) {
+           return reject(err);
+       };
+       return resolve();
+   });
+});
+}
+function finish() {
+    const close = ` </div></div>
+</body>
+</html>`;
+
+    fs.appendFile("./src/page.html", close, function (err) {
+        if (err) {
+            console.log(err);
+        };
+    });
+    console.log("end");
+}
+addEmployee()
